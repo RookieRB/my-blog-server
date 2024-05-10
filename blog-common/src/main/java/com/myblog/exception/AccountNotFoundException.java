@@ -1,6 +1,6 @@
 package com.myblog.exception;
 
-public class AccountNotFoundException extends BaseExpection{
+public class AccountNotFoundException extends BaseException {
     public AccountNotFoundException(){
 
     }

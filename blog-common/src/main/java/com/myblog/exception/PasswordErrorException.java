@@ -1,6 +1,6 @@
 package com.myblog.exception;
 
-public class PasswordErrorException extends BaseExpection{
+public class PasswordErrorException extends BaseException {
     public PasswordErrorException(){
 
     }

@@ -25,4 +25,6 @@ public class User {
     private String mobilePhone;
     // 用户头像
     private String imgUrl;
+    // 用户等级
+    private Integer level;
 }

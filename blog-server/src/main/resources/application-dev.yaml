@@ -6,3 +6,11 @@ myblog:
     database: my_blog
     username: root
     password: 1234
+  mail:
+    username: 1405682733@qq.com
+    password: kqfxmzvxikjlbagi
+    host: smtp.qq.com
+  redis:
+    host: localhost
+    port: 6379
+    database: 0

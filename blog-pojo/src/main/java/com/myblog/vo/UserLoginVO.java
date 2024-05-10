@@ -21,4 +21,6 @@ public class UserLoginVO {
     private String username;
     @ApiModelProperty("jwt令牌")
     private String token;
+    @ApiModelProperty("用户等级")
+    private Integer userLevel;
 }

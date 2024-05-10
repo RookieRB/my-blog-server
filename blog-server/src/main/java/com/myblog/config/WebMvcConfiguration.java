@@ -35,7 +35,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         log.info("开始注册自定义拦截器...");
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/user/**")
-                .excludePathPatterns("/user/user/login");
+                .excludePathPatterns("/user/user/**");
     }
     /**
      * 通过knife4j生成接口文档
@@ -52,7 +52,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .groupName("管理端接口")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.myblog.controller.home"))
+                .apis(RequestHandlerSelectors.basePackage("com.myblog.controller.user"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
@@ -64,6 +64,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/face/**").addResourceLocations("classpath:/static/face/");
     }
     /*
      *  扩展MVC框架的消息转化器
