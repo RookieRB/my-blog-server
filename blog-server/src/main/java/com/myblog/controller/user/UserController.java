@@ -2,6 +2,7 @@ package com.myblog.controller.user;
 
 import com.myblog.constant.MessageConstant;
 import com.myblog.dto.UserLoginDTO;
+import com.myblog.dto.UserRegisterDTO;
 import com.myblog.entity.User;
 import com.myblog.exception.SendEmailCodeFailedException;
 import com.myblog.properties.JwtProperties;
@@ -15,12 +16,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import com.myblog.constant.JwtClaimsConstant;
 
 import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RequestMapping("/user/user")
 @RestController
@@ -33,9 +36,13 @@ public class UserController {
     private JwtProperties jwtProperties;
     @Autowired
     private MailUtils mailUtils;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+
 
     @ApiOperation("界面登录")
-    @PostMapping("/login")
+    @PostMapping("login")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userinfo) {
 
         User currentUser = userService.login(userinfo);
@@ -75,7 +82,43 @@ public class UserController {
 
     @ApiOperation("用户注册")
     @PostMapping(value = "register")
-    public Result<String> register(@RequestBody User user) {
+    public Result<String> register(@RequestBody UserRegisterDTO currentUser) {
+        if(
+                currentUser.getUserName().isEmpty()
+                || currentUser.getEmail().isEmpty()
+                || currentUser.getPassword().isEmpty()
+                || currentUser.getConfirmCode().isEmpty()
+        ){
+            return Result.error(MessageConstant.INFO_NOT_FULL);
+        }
+        // 检查用户是否已经存在
+        String userName = currentUser.getUserName();
+        String password = currentUser.getPassword();
+        Boolean isUserExits = userService.isUserExits(userName);
+        if(isUserExits){
+            return Result.error(MessageConstant.USER_ALREADY_EXISTS);
+        }
+        // 查询验证码是否正确
+        String confirmCode = currentUser.getConfirmCode();
+        String codeInRedis = redisTemplate.opsForValue().get(currentUser.getEmail());
 
+        if(Objects.equals(confirmCode, codeInRedis)){
+            // 注册用户
+            User user = User.builder()
+                   .userName(userName)
+                    .password(password)
+                    .email(currentUser.getEmail())
+                    .userNickname(userName)
+                    .imgUrl("localhost:8080/img/avatar.png")
+                    .level(1)
+                    .build();
+            boolean isTrue = userService.register(user);
+            if(isTrue){
+                return Result.success(MessageConstant.REGISTER_SUCCESS);
+            }else{
+                return Result.error(MessageConstant.REGISTER_ERROR);
+            }
+        }
+        return Result.error(MessageConstant.CODE_ERROR);
     }
 }

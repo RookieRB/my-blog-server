@@ -3,7 +3,6 @@ package com.myblog.aspect;
 
 import com.myblog.annotation.AutoFill;
 import com.myblog.constant.AutoFillConstant;
-import com.myblog.context.BaseContext;
 import com.myblog.enumeration.OperationType;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -45,17 +44,15 @@ public class AutoFillAspect {
         Object entity = args[0];
         // 准备赋值的属性 时间
         LocalDateTime now = LocalDateTime.now();
-        Long currentId = BaseContext.getCurrentId();
         // 根据当前不同的操作类型，为对应的属性通过反射来赋值
         if(operationType == OperationType.INSERT){
             try {
                 Method setCreateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
                 Method setUpdateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
 
-
                 // 通过反射为对象属性赋值
-                setUpdateTime.invoke(entity,now);
-                setUpdateTime.invoke(entity,now);
+                setCreateTime.invoke(entity,now);
+
 
             } catch (Exception e) {
                e.printStackTrace();

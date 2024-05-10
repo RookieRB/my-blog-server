@@ -1,11 +1,13 @@
 package com.myblog.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@Builder
 public class User {
     // 用户id
     private Long id;
@@ -18,7 +20,7 @@ public class User {
     // 用户邮箱
     private String email;
     // 用户创建时间
-    private LocalDateTime create_time;
+    private LocalDateTime createTime;
     // 用户生日
     private Date birthday;
     // 用户手机号

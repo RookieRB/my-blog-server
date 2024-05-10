@@ -12,6 +12,8 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -32,5 +34,24 @@ public class UserServiceImpl implements UserService {
         }
         //返回对象
         return currentUser;
+    }
+
+    @Override
+    public boolean isUserExits(String username) {
+        User user = userMapper.getUserByName(username);
+        if(user == null){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean register(User user) {
+        user.setCreateTime(LocalDateTime.now());
+        int result = userMapper.insertUser(user);
+        if(result == 1) {
+            return true;     // 注册成功
+        }
+        return false;    // 注册失败
     }
 }

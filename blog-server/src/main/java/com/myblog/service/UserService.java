@@ -6,4 +6,7 @@ import com.myblog.vo.UserLoginVO;
 
 public interface UserService {
     User login(UserLoginDTO userinfo);
+
+    boolean isUserExits(String username);
+    boolean register(User user);
 }

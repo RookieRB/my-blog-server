@@ -65,6 +65,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/face/**").addResourceLocations("classpath:/static/face/");
+        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
     }
     /*
      *  扩展MVC框架的消息转化器
