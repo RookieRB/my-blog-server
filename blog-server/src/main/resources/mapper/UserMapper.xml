@@ -5,6 +5,6 @@
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.myblog.entity.User">
         INSERT INTO user (username, password, user_nickname,email,img_url, create_time,birthday,mobile_phone,level)
-        VALUES (#{userName}, #{password}, #{userNickname},#{email},#{imgUrl}, #{createTime},#{birthday},#{mobilePhone},#{level})
+        VALUES (#{userName}, #{password}, #{userNickname},#{email},#{imgUrl},#{createTime},#{birthday},#{mobilePhone},#{level})
     </insert>
 </mapper>

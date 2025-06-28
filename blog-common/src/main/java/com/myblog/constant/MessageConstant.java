@@ -17,4 +17,12 @@ public class MessageConstant {
 
     public static final String REGISTER_SUCCESS = "注册成功，请登录";
     public static final String CODE_ERROR = "验证码错误";
+    public static final String INSERT_FAILED = "插入失败";
+
+
+    public static final String LOGIN_INFO_EXPIRE = "登录信息已过期，请重新登录";
+
+
+    public static final String ARTICLE_NOT_FOUND = "获取文章失败";
+    public static final String ARTICLE_NOT_EXITS = "文章不存在";
 }

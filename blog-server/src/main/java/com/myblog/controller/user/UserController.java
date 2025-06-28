@@ -7,6 +7,7 @@ import com.myblog.entity.User;
 import com.myblog.exception.SendEmailCodeFailedException;
 import com.myblog.properties.JwtProperties;
 import com.myblog.result.Result;
+import com.myblog.service.QrCodeService;
 import com.myblog.service.UserService;
 import com.myblog.utils.CodeGeneratorUtil;
 import com.myblog.utils.JwtUtil;
@@ -20,7 +21,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import com.myblog.constant.JwtClaimsConstant;
 
-import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -38,6 +38,8 @@ public class UserController {
     private MailUtils mailUtils;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private QrCodeService qrCodeService;
 
 
 
@@ -54,17 +56,20 @@ public class UserController {
                 jwtProperties.getUserTtl(),
                 claims);
 
-
         UserLoginVO userLoginVO = UserLoginVO.builder()
                 .id(currentUser.getId())
-                .username(currentUser.getUserName())
+                .userName(currentUser.getUserName())
                 .token(token)
-                .userImg(currentUser.getImgUrl())
-                .userLevel(currentUser.getLevel())
+                .imgUrl(currentUser.getImgUrl())
+                .level(currentUser.getLevel())
+                .userNickname(currentUser.getUserNickname())
                 .build();
         return Result.success(userLoginVO);
     }
-
+    @PostMapping(value = "/test")
+    public Result<String> test1(){
+        return Result.success();
+    }
 
     @ApiOperation("发送邮箱验证码")
     @GetMapping(value = "sendEmail/{email}")
@@ -110,6 +115,8 @@ public class UserController {
                     .email(currentUser.getEmail())
                     .userNickname(userName)
                     .imgUrl("localhost:8080/img/avatar.png")
+                    .birthday(null)
+                    .mobilePhone(null)
                     .level(1)
                     .build();
             boolean isTrue = userService.register(user);
@@ -121,4 +128,38 @@ public class UserController {
         }
         return Result.error(MessageConstant.CODE_ERROR);
     }
+
+
+    /**
+     * 生成二维码
+     */
+    @GetMapping("generateQrCode")
+    public Result generateQrCode() {
+        return qrCodeService.generateQrCode();
+    }
+
+
+    /**
+     * 检查二维码状态
+     */
+    @GetMapping("checkQrCode/{qrCodeId}")
+    public Result checkQrCodeStatus(@PathVariable String qrCodeId) {
+        return qrCodeService.checkQrCodeStatus(qrCodeId);
+    }
+
+    /**
+     * 确认二维码登录
+     */
+    @PostMapping("confirmQrCodeLogin")
+    public Result confirmQrCodeLogin(@RequestBody Map<String, Object> confirmForm) {
+        String qrCodeId = (String) confirmForm.get("qrCodeId");
+        Long userId = Long.valueOf(confirmForm.get("userId").toString());
+
+        if (qrCodeId == null || userId == null) {
+            return Result.error("参数不完整");
+        }
+
+        return qrCodeService.confirmQrCodeLogin(qrCodeId, userId);
+    }
+
 }

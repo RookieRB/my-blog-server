@@ -3,5 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.myblog.mapper.MessageMapper">
 
+    <insert id="insertMessage" parameterType="com.myblog.dto.MessageDTO">
+        INSERT INTO message (message_id,create_time, like_count, message_user, message_content,parent_id)
 
+        VALUES (#{messageId},#{createTime},#{likeCount},#{messageUser},#{messageContent},#{parentId})
+    </insert>
 </mapper>

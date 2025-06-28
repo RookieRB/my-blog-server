@@ -2,6 +2,7 @@ package com.myblog.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.myblog.entity.Article;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,10 @@ public class ArticleVO {
     // 发布时间
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime pushDate;
-    // 发表用户
-    private String articleUser;
+    // 发表用户id
+    private Long articleUser;
+    // 发表用户昵称
+    private String articleUserNickname;
     // 博文标题
     private String title;
     // 点赞数

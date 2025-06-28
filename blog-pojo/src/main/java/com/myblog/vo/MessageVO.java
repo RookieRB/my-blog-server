@@ -15,17 +15,17 @@ import java.util.ArrayList;
 @Builder
 public class MessageVO {
     // 留言ID
-    private Long messageID;
+    private Long messageId;
     // 创建时间
     private LocalDateTime createTime;
     // 点赞数
     private Integer likeCount;
-    // 发表用户名字
-    private String userName;
+    // 发表用户昵称
+    private String userNickname;
     // 发表用户头像
-    private String userImg;
+    private String imgUrl;
     // 发表用户等级
-    private Integer userLevel;
+    private Integer level;
     // 留言内容
     private String messageContent;
     // 子留言

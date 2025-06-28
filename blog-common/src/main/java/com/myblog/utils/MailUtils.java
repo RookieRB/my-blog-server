@@ -1,5 +1,6 @@
 package com.myblog.utils;
 
+import com.google.j2objc.annotations.Property;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,16 +14,17 @@ import javax.mail.internet.MimeMessage;
 import java.time.Duration;
 import java.util.Properties;
 
+
 @Service
 @RequiredArgsConstructor
 public class MailUtils {
-    @Value("${spring.mail.username}")
+    @Value("${myblog.mail.username}")
     private String username;
 
-    @Value("${spring.mail.password}")
+    @Value("${myblog.mail.password}")
     private String password;
 
-    @Value("${spring.mail.host}")
+    @Value("${myblog.mail.host}")
     private String host;
 
     @Autowired

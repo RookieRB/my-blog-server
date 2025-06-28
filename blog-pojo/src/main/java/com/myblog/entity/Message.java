@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class Message {
     // 留言ID
-    private Long messageID;
+    private Long messageId;
     // 创建时间
     private LocalDateTime createTime;
     // 点赞数

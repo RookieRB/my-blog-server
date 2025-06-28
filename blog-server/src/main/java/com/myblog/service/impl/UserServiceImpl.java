@@ -8,7 +8,9 @@ import com.myblog.exception.PasswordErrorException;
 import com.myblog.mapper.UserMapper;
 import com.myblog.service.UserService;
 import com.myblog.vo.UserLoginVO;
+import com.myblog.vo.UserVO;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +55,17 @@ public class UserServiceImpl implements UserService {
             return true;     // 注册成功
         }
         return false;    // 注册失败
+    }
+
+    @Override
+    public UserVO getCurrentUser(Long currentUserId) {
+        User currentUser = userMapper.getuserBuyId(currentUserId);
+        if (currentUser == null) {
+            return null; // 或者抛异常，视情况而定
+        }
+
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(currentUser,userVO);
+        return userVO;
     }
 }

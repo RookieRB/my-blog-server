@@ -11,12 +11,14 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import com.myblog.interceptor.JwtTokenAdminInterceptor;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ import java.util.List;
  */
 @Configuration
 @Slf4j
-public class WebMvcConfiguration extends WebMvcConfigurationSupport {
+public class WebMvcConfiguration extends WebMvcConfigurationSupport  {
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
     /**
@@ -52,7 +54,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .groupName("管理端接口")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.myblog.controller.user"))
+                .apis(RequestHandlerSelectors.basePackage("com.myblog.controller.home"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
@@ -66,6 +68,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/face/**").addResourceLocations("classpath:/static/face/");
         registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+        registry.addResourceHandler("/live2d/**").addResourceLocations("classpath:/static/live2d/");
     }
     /*
      *  扩展MVC框架的消息转化器
@@ -80,4 +83,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         // 将自己的消息转化器加入容器中
         converters.add(0,converter);
     }
+
+
 }

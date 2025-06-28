@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.myblog.mapper.ArticleMapper">
+
+    <insert id="insertArticle" parameterType="com.myblog.entity.Article" useGeneratedKeys="true" keyProperty="articleId">
+        INSERT INTO article (push_date, article_user, article_user_nickname, title, like_count,
+                             comment_count, read_count, top_flag, create_time, article_summary, article_img)
+        VALUES (#{pushDate}, #{articleUser}, #{articleUserNickname}, #{title}, #{likeCount},
+                #{commentCount}, #{readCount}, #{topFlag}, #{createTime}, #{articleSummary}, #{articleImg})
+    </insert>
+
+    <insert id="insertArticleDetail" parameterType="com.myblog.entity.ArticleDetail">
+        INSERT INTO article_detail (content_md, content_html, article_id)
+        VALUES (#{contentMd}, #{contentHtml}, #{articleId})
+    </insert>
+
+    <insert id="insertArticleCategory" parameterType="com.myblog.entity.ArticleCategoryReferenced">
+        INSERT INTO article_category_referenced (article_id, category_id)
+        VALUES (#{articleId}, #{categoryId})
+    </insert>
+
+    <insert id="insertArticleTag" parameterType="com.myblog.entity.ArticleTagReferenced">
+        INSERT INTO article_tag_referenced (article_id, tag_id)
+        VALUES (#{articleId}, #{tagId})
+    </insert>
+    <select id="pageQuery" resultType="com.myblog.vo.ArticleManageVO">
+        SELECT
+            a.article_id AS articleId,
+            a.push_date AS pushDate,
+            a.article_user AS articleUser,
+            a.article_user_nickname AS articleUserNickname,
+            a.title,
+            a.like_count AS likeCount,
+            a.comment_count AS commentCount,
+            a.read_count AS readCount,
+            a.article_summary AS articleSummary,
+            a.article_img AS articleImg,
+            c.category_id AS categoryId,
+            c.alias_name AS categoryName,
+            ad.content_md AS contentMd,
+            ad.content_html AS contentHtml,
+            GROUP_CONCAT(t.tag_id ORDER BY t.tag_id SEPARATOR ',') AS tagIds,
+            GROUP_CONCAT(t.alias_name ORDER BY t.tag_id SEPARATOR ',') AS tagNames
+        FROM
+            article a
+                LEFT JOIN article_category_referenced acr ON a.article_id = acr.article_id
+                LEFT JOIN category c ON acr.category_id = c.category_id
+                LEFT JOIN article_tag_referenced atr ON a.article_id = atr.article_id
+                LEFT JOIN tag t ON atr.tag_id = t.tag_id
+                LEFT JOIN article_detail ad ON ad.article_id = a.article_id
+        GROUP BY
+            a.article_id,
+            a.push_date,
+            a.article_user,
+            a.article_user_nickname,
+            a.title,
+            a.like_count,
+            a.comment_count,
+            a.read_count,
+            a.article_summary,
+            a.article_img,
+            c.category_id,
+            c.alias_name,
+            ad.content_md,
+            ad.content_html
+    </select>
+    <select id="getArticleDetailById" resultType="com.myblog.vo.ArticleManageVO">
+        SELECT
+            a.article_id AS articleId,
+            a.push_date AS pushDate,
+            a.article_user AS articleUser,
+            a.article_user_nickname AS articleUserNickname,
+            a.title,
+            a.like_count AS likeCount,
+            a.comment_count AS commentCount,
+            a.read_count AS readCount,
+            a.article_summary AS articleSummary,
+            a.article_img AS articleImg,
+            c.category_id AS categoryId,
+            c.alias_name AS categoryName,
+            ad.content_md AS contentMd,
+            ad.content_html AS contentHtml,
+            GROUP_CONCAT(t.tag_id ORDER BY t.tag_id SEPARATOR ',') AS tagIds,
+            GROUP_CONCAT(t.alias_name ORDER BY t.tag_id SEPARATOR ',') AS tagNames
+        FROM
+            article a
+                LEFT JOIN article_category_referenced acr ON a.article_id = acr.article_id
+                LEFT JOIN category c ON acr.category_id = c.category_id
+                LEFT JOIN article_tag_referenced atr ON a.article_id = atr.article_id
+                LEFT JOIN tag t ON atr.tag_id = t.tag_id
+                LEFT JOIN article_detail ad ON ad.article_id = a.article_id
+        where a.article_id = #{articleId}
+        GROUP BY
+            a.article_id,
+            a.push_date,
+            a.article_user,
+            a.article_user_nickname,
+            a.title,
+            a.like_count,
+            a.comment_count,
+            a.read_count,
+            a.article_summary,
+            a.article_img,
+            c.category_id,
+            c.alias_name,
+            ad.content_md,
+            ad.content_html
+    </select>
+
+
+    <delete id="deleteArticleTagsByIds">
+        DELETE FROM article_tag_referenced
+        WHERE article_id = #{articleId} AND tag_id IN
+        <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
+            #{tagId}
+        </foreach>
+    </delete>
+
+
+    <update id="updateArticle" parameterType="com.myblog.entity.Article">
+        UPDATE article
+        SET push_date = #{pushDate},
+            article_user = #{articleUser},
+            article_user_nickname = #{articleUserNickname},
+            title = #{title},
+            top_flag = #{topFlag},
+            article_summary = #{articleSummary},
+            article_img = #{articleImg}
+        WHERE article_id = #{articleId}
+    </update>
+
+    <update id="updateArticleDetail" parameterType="com.myblog.entity.ArticleDetail">
+        UPDATE article_detail
+        SET content_md = #{contentMd},
+            content_html = #{contentHtml}
+        WHERE article_id = #{articleId}
+    </update>
+</mapper>

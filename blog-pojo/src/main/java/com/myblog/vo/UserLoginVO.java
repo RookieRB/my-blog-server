@@ -16,11 +16,13 @@ public class UserLoginVO {
     @ApiModelProperty("主键值")
     private Long id;
     @ApiModelProperty("用户图片")
-    private String userImg;
+    private String imgUrl;
     @ApiModelProperty("用户名")
-    private String username;
+    private String userName;
     @ApiModelProperty("jwt令牌")
     private String token;
     @ApiModelProperty("用户等级")
-    private Integer userLevel;
+    private Integer level;
+    @ApiModelProperty("用户昵称")
+    private String userNickname;
 }
